@@ -1,7 +1,7 @@
 libevent-nacl-port
 ==================
 
-NaCl port of libevent. NOTE: work in progress.
+NaCl port of libevent. NOTE: this is work in progress. It builds successfully on Ubuntu 12.04 but I have yet to verify that it actually works in any practical circumstances.
 
 Usage
 -----
