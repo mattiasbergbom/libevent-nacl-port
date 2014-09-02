@@ -1,0 +1,7 @@
+NAME=libevent
+VERSION=2.1.4-alpha
+URL=http://downloads.sourceforge.net/project/levent/libevent/libevent-2.1/libevent-2.1.4-alpha.tar.gz
+LICENSE=CUSTOM:LICENSE
+BUILD_OS=linux
+DEPENDS=(glibc-compat openssl)
+SHA1=7d5180b247a03338ef7230a3165645dc4587b4c5
