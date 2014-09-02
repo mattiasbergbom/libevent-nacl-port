@@ -14,13 +14,13 @@ Changes
 
 These changes were made in order to make libevent build in the NaCl toolchains:
 
-1. mkfifo is currently missing from newlib, so I disabled the event-read-fifo test.
-2. reverse domain name lookups are currently not supported in NaCl (https://groups.google.com/forum/#!topic/native-client-discuss/wE6Gl1NCNys) so exiting with code 1 where gethostbyaddr was previously called. TODO: replace by a stub?
+1. ```mkfifo``` is currently missing from newlib, so I disabled the event-read-fifo test.
+2. reverse domain name lookups are currently not supported in NaCl (https://groups.google.com/forum/#!topic/native-client-discuss/wE6Gl1NCNys) so exiting with code 1 where ```gethostbyaddr``` was previously called. TODO: replace by a stub?
 3. newlib doesn't have readv or writev. Inserted implementations obtained from Mike Acton (https://github.com/macton/nativecolors/blob/master/client/src/libraries/nativeblue/readv.c).
-4. replaced calls to random()/srandom() (which were missing) by rand()/srand() ditto.
-5. newlib doesn't have itimerval and related calls, so I removed tests that use them.
-6. SA_RESTART and SA_NODEFER were missing, so I took a queue from the python port: https://code.google.com/p/naclports/source/browse/trunk/src/ports/python3/nacl.patch?r=998#130 and defined them.
-7. libevent's configure script resets the LIBS var before checking for SSL_new, which breaks a dependency and results in no SSL support. I removed the offending line.
+4. replaced calls to ```random()```/```srandom()``` (which were missing) by ```rand()```/```srand()``` ditto.
+5. newlib doesn't have ```itimerval``` or related calls, so I removed tests that use them.
+6. ```SA_RESTART``` and ```SA_NODEFER``` were missing, so I took a queue from the python port: https://code.google.com/p/naclports/source/browse/trunk/src/ports/python3/nacl.patch?r=998#130 and defined them.
+7. libevent's configure script resets the ```LIBS``` var before checking for ```SSL_new()```, which breaks a dependency and results in no SSL support. I removed the offending line.
 
 Notice
 ------
