@@ -7,7 +7,7 @@ Usage
 -----
 
 1. Check out commit ```18739766...``` of naclports (https://code.google.com/p/naclports/wiki/HowTo_Checkout). I was not able to make anything build using the current head (```f6d0d9c5d1...```).
-2. Check out this directory and place its contents under src/ports/libevent in your naclports tree.
+2. Check out this repo and place its contents under src/ports/libevent in your naclports tree.
 3. ```./make_all.sh libevent``` as usual, or whichever way you prefer to build your ports.
 
 Changes
