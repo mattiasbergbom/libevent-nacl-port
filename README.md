@@ -2,7 +2,9 @@ libevent-nacl-port
 ==================
 
 NaCl port of libevent. NOTE: this is work in progress. It builds successfully on Ubuntu 12.04 but I have yet to verify that it actually functions in any meaningful way. 
+
 **UPDATE**: I was able to get a trivial UDP listener to work using the current configuration. Will post example code when time allows.
+
 **UPDATE 2**: I have now also been able to get a trivial HTTP server running. Example code when time permits.
 
 Usage
