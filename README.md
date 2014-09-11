@@ -15,6 +15,7 @@ Changes
 
 These changes were made in order to make libevent build in the NaCl toolchains:
 
+0. Features from ```sys/uio.h``` such as ```readv()``` and ```writev()``` are just stubs and so always return -1, even though libevent thinks they exist. Disabled the ```HAVE_SYS_UIO_H``` config flag.
 1. ```mkfifo``` is currently missing from newlib, so I disabled the event-read-fifo test.
 2. reverse domain name lookups are currently not supported in NaCl (https://groups.google.com/forum/#!topic/native-client-discuss/wE6Gl1NCNys) so exiting with code 1 where ```gethostbyaddr``` was previously called. TODO: replace by a stub?
 3. newlib doesn't have readv or writev. Inserted implementations obtained from Mike Acton (https://github.com/macton/nativecolors/blob/master/client/src/libraries/nativeblue/readv.c).
@@ -22,8 +23,12 @@ These changes were made in order to make libevent build in the NaCl toolchains:
 5. newlib doesn't have ```itimerval``` or related calls, so I removed tests that use them.
 6. ```SA_RESTART``` and ```SA_NODEFER``` were missing, so I took a queue from the python port: https://code.google.com/p/naclports/source/browse/trunk/src/ports/python3/nacl.patch?r=998#130 and defined them.
 7. libevent's configure script resets the ```LIBS``` var before checking for ```SSL_new()```, which breaks a dependency and results in no SSL support. I removed the offending line.
-8. NaCl only provides stubs (i.e. non-working shells) for ```getnameinfo``` and ```getaddrinfo```, so I'm forcibly disabling those in ```config.h```.
+8. NaCl only provides stubs (i.e. non-working shells) for ```getnameinfo``` and ```getaddrinfo```, so I'm forcibly disabling those in ```config.h``` in favor of libevent's homegrown ones.
 
+Performance
+-----------
+
+All in all we're missing quite a bunch of stuff compared to, say, a modern Linux distro. How much of a performance hit this is though - not to mention the added Pepper API layers! - remains to be seen. I'll add info here once I have it.
 
 Notice
 ------
