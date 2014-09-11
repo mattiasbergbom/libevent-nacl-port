@@ -100,57 +100,6 @@
  			if (hp == NULL)
  				return (-2);
  
---- libevent-2.1.4-alpha-old/evutil.c	2014-09-01 15:54:36.977712985 +0200
-+++ libevent-2.1.4-alpha/evutil.c	2014-09-01 16:58:07.554206806 +0200
-@@ -2647,3 +2647,48 @@
- 	evutil_free_secure_rng_globals_();
- 	evutil_free_sock_err_globals();
- }
-+
-+#include <sys/cdefs.h>
-+#include <sys/types.h>
-+#include <sys/uio.h>
-+#include <unistd.h>
-+
-+ssize_t readv(int d, const struct iovec *iov, int iovcnt)
-+{
-+  ssize_t total_read_len;
-+  int     i;
-+ 
-+  total_read_len = 0;
-+  for (i=0;i<iovcnt;i++)
-+    {
-+      ssize_t read_len = read( d, iov[i].iov_base, iov[i].iov_len );
-+      if ( read_len != iov[i].iov_len )
-+	{
-+	  // errno set by read
-+	  return -1;
-+	}
-+      total_read_len += read_len;
-+    }
-+
-+  return total_read_len;
-+}
-+
-+ssize_t writev(int d, const struct iovec *iov, int iovcnt)
-+{
-+  ssize_t total_write_len;
-+  int     i;
-+ 
-+  total_write_len = 0;
-+  for (i=0;i<iovcnt;i++)
-+    {
-+      ssize_t write_len = write( d, iov[i].iov_base, iov[i].iov_len );
-+      if ( write_len != iov[i].iov_len )
-+	{
-+	  // errno set by write
-+	  return -1;
-+	}
-+      total_write_len += write_len;
-+    }
-+
-+  return total_write_len;
-+}
 --- libevent-2.1.4-alpha-old/test/test-ratelim.c	2014-09-01 15:54:37.009728583 +0200
 +++ libevent-2.1.4-alpha/test/test-ratelim.c	2014-09-01 17:05:42.054001442 +0200
 @@ -113,11 +113,7 @@
@@ -256,3 +205,84 @@ index 8a5e46d..dc226ed 100755
  	OPENSSL_LIBS=""
  	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for library containing SSL_new" >&5
  $as_echo_n "checking for library containing SSL_new... " >&6; }
+diff --git a/evutil.c b/evutil.c
+index 5690d49..2f0da6f 100644
+--- a/evutil.c
++++ b/evutil.c
+@@ -86,6 +86,8 @@
+ #include "strlcpy-internal.h"
+ #include "ipv6-internal.h"
+ 
++#include <nacl_io/kernel_intercept.h>
++
+ #ifdef _WIN32
+ #define HT_NO_CACHE_HASH_VALUES
+ #include "ht-internal.h"
+@@ -2548,6 +2550,8 @@ evutil_accept4_(evutil_socket_t sockfd, struct sockaddr *addr,
+ 	return result;
+ }
+ 
++
++
+ /* Internal function: Set fd[0] and fd[1] to a pair of fds such that writes on
+  * fd[0] get read from fd[1].  Make both fds nonblocking and close-on-exec.
+  * Return 0 on success, -1 on failure.
+@@ -2569,7 +2573,8 @@ evutil_make_internal_pipe_(evutil_socket_t fd[2])
+ 		return 0;
+ #endif
+ #if defined(EVENT__HAVE_PIPE)
+-	if (pipe(fd) == 0) {
++	fprintf(stderr, "%s:%d\n", __FILE__,__LINE__);
++	if (ki_pipe(fd) == 0) {
+ 		if (evutil_fast_socket_nonblocking(fd[0]) < 0 ||
+ 		    evutil_fast_socket_nonblocking(fd[1]) < 0 ||
+ 		    evutil_fast_socket_closeonexec(fd[0]) < 0 ||
+@@ -2647,3 +2652,48 @@ evutil_free_globals_(void)
+ 	evutil_free_secure_rng_globals_();
+ 	evutil_free_sock_err_globals();
+ }
++
++#include <sys/cdefs.h>
++#include <sys/types.h>
++#include <sys/uio.h>
++#include <unistd.h>
++
++ssize_t readv(int d, const struct iovec *iov, int iovcnt)
++{
++  ssize_t total_read_len;
++  int     i;
++ 
++  total_read_len = 0;
++  for (i=0;i<iovcnt;i++)
++    {
++      ssize_t read_len = read( d, iov[i].iov_base, iov[i].iov_len );
++      if ( read_len != iov[i].iov_len )
++	{
++	  // errno set by read
++	  return -1;
++	}
++      total_read_len += read_len;
++    }
++
++  return total_read_len;
++}
++
++ssize_t writev(int d, const struct iovec *iov, int iovcnt)
++{
++  ssize_t total_write_len;
++  int     i;
++ 
++  total_write_len = 0;
++  for (i=0;i<iovcnt;i++)
++    {
++      ssize_t write_len = write( d, iov[i].iov_base, iov[i].iov_len );
++      if ( write_len != iov[i].iov_len )
++	{
++	  // errno set by write
++	  return -1;
++	}
++      total_write_len += write_len;
++    }
++
++  return total_write_len;
++}
