@@ -22,6 +22,8 @@ These changes were made in order to make libevent build in the NaCl toolchains:
 5. newlib doesn't have ```itimerval``` or related calls, so I removed tests that use them.
 6. ```SA_RESTART``` and ```SA_NODEFER``` were missing, so I took a queue from the python port: https://code.google.com/p/naclports/source/browse/trunk/src/ports/python3/nacl.patch?r=998#130 and defined them.
 7. libevent's configure script resets the ```LIBS``` var before checking for ```SSL_new()```, which breaks a dependency and results in no SSL support. I removed the offending line.
+8. NaCl only provides stubs (i.e. non-working shells) for ```getnameinfo``` and ```getaddrinfo```, so I'm forcibly disabling those in ```config.h```.
+
 
 Notice
 ------
