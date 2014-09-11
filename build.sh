@@ -74,8 +74,12 @@ BuildStep() {
     # not to use it.  Are you running into other places where not having this function is a problem?")
     perl -i -pe 's|#define HAVE_GETNAMEINFO 1|//#define HAVE_GETNAMEINFO 1|g' config.h
     perl -i -pe 's|#define HAVE_GETADDRINFO 1|//#define HAVE_GETADDRINFO 1|g' config.h
+    # sys/uio.h and associated functions are stubbed out and thus detected as available,
+    # even though readv/writev simply return -1. Disabling.
+    perl -i -pe 's|#define HAVE_SYS_UIO_H 1|//#define HAVE_SYS_UIO_H 1|g' config.h
     echo "After config.h tweak ------------------------------------------------------"
     LogExecute grep GETNAMEINFO config.h
+    LogExecute grep HAVE_SYS_UIO config.h
     
     DefaultBuildStep
 }
