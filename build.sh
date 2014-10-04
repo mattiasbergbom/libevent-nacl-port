@@ -20,7 +20,7 @@ ConfigureStep() {
   else
           # i686 maps to x86_32 (at least on Ubuntu 12.04 64-bit...)
       if [ "${NACL_ARCH}" = "i686" ] ; then 
-	  local arch=x86_32
+	      local arch=x86_32
       else
 	  local arch=${NACL_ARCH}
       fi
@@ -67,26 +67,28 @@ BuildStep() {
     LogExecute make clean
     LogExecute make config.h
 
-    echo "Before config.h tweak ------------------------------------------------------"
-    LogExecute grep GETNAMEINFO config.h
     # fix getnameinfo / getaddrinfo that are currently just stubs
     # ("The plan is to add this, but I don't see it as urgent.  python in naclports has been configured
     # not to use it.  Are you running into other places where not having this function is a problem?")
     perl -i -pe 's|#define HAVE_GETNAMEINFO 1|//#define HAVE_GETNAMEINFO 1|g' config.h
     perl -i -pe 's|#define HAVE_GETADDRINFO 1|//#define HAVE_GETADDRINFO 1|g' config.h
-    # sys/uio.h and associated functions are stubbed out and thus detected as available,
-    # even though readv/writev simply return -1. Disabling.
+
+    # sys/uio.h and associated functions are currently merely stubs in NaCl. Tell libevent to make
+    # do without them:
     perl -i -pe 's|#define HAVE_SYS_UIO_H 1|//#define HAVE_SYS_UIO_H 1|g' config.h
-    echo "After config.h tweak ------------------------------------------------------"
-    LogExecute grep GETNAMEINFO config.h
-    LogExecute grep HAVE_SYS_UIO config.h
-    
+
+    # timer functionality that's only stubbed out in NaCl. Tell libevent to make
+    # do without them:
+    perl -i -pe 's|#define HAVE_TIMERADD 1|//#define HAVE_TIMERADD 1|g' config.h
+    perl -i -pe 's|#define HAVE_TIMERCLEAR 1|//#define HAVE_TIMERCLEAR 1|g' config.h
+    perl -i -pe 's|#define HAVE_TIMERCMP 1|//#define HAVE_TIMERCMP 1|g' config.h
+    perl -i -pe 's|#define HAVE_TIMERISSET 1|//#define HAVE_TIMERISSET 1|g' config.h
+
     DefaultBuildStep
 }
 
 
 InstallStep() {
-  #DefaultInstallStep
   DESTDIR=${DESTDIR} make install
 }
 
