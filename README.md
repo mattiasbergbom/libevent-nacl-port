@@ -36,7 +36,7 @@ While we await a proper fix, I was able to make the UDP send call synchronous by
 Performance
 -----------
 
-All in all it seems we're missing quite a bunch of Socket API calls compared to, say, a modern Linux distro. How much of a performance hit this is though - and whether it's even a blip on the radar compared to the Pepper API overhead - remains to be seen. I'll add info here once I have it.
+All in all it seems we're missing quite a bunch of Socket API calls compared to, say, a modern Linux distro. How much of a performance hit this is though - and whether it's even a blip on the radar compared to the Pepper API overhead - remains to be seen. If anything, my guess is that the abovementioned nacl_io hack will be the most costly change, but I'll add more concrete info here once I have it.
 
 Notice
 ------
