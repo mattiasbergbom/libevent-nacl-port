@@ -35,14 +35,14 @@ ConfigureStep() {
 
       local libs="-lnacl_io -lstdc++ -lpthread ${extra_libs}"
       local ldflags="-L${NACL_SDK_ROOT}/lib/${nacl_lib}/Release"
-      local cflags="-g -O0 -I${NACLPORTS_INCLUDE}/glibc-compat -I${NACL_SDK_ROOT}/include"
+      local cflags="-O2 -I${NACLPORTS_INCLUDE}/glibc-compat -I${NACL_SDK_ROOT}/include"
   else
       # --------------------------
       # glibc
       # --------------------------
       local arch=${NACL_ARCH}
       local ldflags="-L${NACL_SDK_ROOT}/lib/${nacl_lib}/Release"
-      local cflags="-g -O0 -I${NACL_SDK_ROOT}/include"
+      local cflags="-O2 -I${NACL_SDK_ROOT}/include"
       local libs="-lnacl_io"
   fi
   # bash seems incapable of passing space-delimited lists of env vars via commandline,
