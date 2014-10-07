@@ -312,3 +312,15 @@ index efc4240..21f4558 100755
  ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
  ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
  ac_compiler_gnu=$ac_cv_c_compiler_gnudiff --git a/bufferevent_sock.c b/bufferevent_sock.c
+diff --git a/http.c b/http.c
+index c5e143a..84f6132 100644
+--- a/http.c
++++ b/http.c
+@@ -43,6 +43,7 @@
+ #endif
+ 
+ #ifndef _WIN32
++#include <sys/cdefs.h>
+ #include <sys/resource.h>
+ #include <sys/socket.h>
+ #include <sys/stat.h>
